@@ -81,6 +81,21 @@ DSH_APP=/path/to/dsh/app npm run test:dsh
 
 覆盖逐字节还原、Unicode、API 路径、父子与兄弟会话、凭据隔离、同会话并发、缓存逐出与 TTL、完整性和大小校验、安全补传、网络错误不重放，以及真实 DSH `LlmRuntime → PiAiAdapter → HTTP` 链路。`test/protocol-v1.json` 是跨语言协议夹具。
 
+## 仓库维护
+
+开发以 [自建 Git 仓库](https://git.fengzee.me/dsh-request-transport.git) 为主，[GitHub](https://github.com/fengzee/dsh-request-transport) 保留公开镜像，供安装和浏览源码。`origin` 从自建端拉取，一次推送依次同步自建端和 GitHub。新开发副本配置如下：
+
+```bash
+git remote set-url origin https://git.fengzee.me/dsh-request-transport.git
+git config --replace-all remote.origin.pushurl https://git.fengzee.me/dsh-request-transport.git
+git config --add remote.origin.pushurl https://github.com/fengzee/dsh-request-transport.git
+git push origin main
+# 发布新版本时，同步该版本标签到两端。
+git push origin <版本标签>
+```
+
+GitHub Actions 已在仓库设置中关闭，仓库不保留自动触发的工作流。代码变更在本机运行上述测试后提交；推送后用 `git ls-remote` 核对两端主分支和发布标签。
+
 ## 社区相关实现
 
 [HolynnChen/dsh-plugin-model-request-accelerator](https://github.com/HolynnChen/dsh-plugin-model-request-accelerator) 已提供请求压缩、HTTP/2、提前发送历史和耗时显示。其预传输通过提前打开并部分写入请求来减少等待，仍然上传这些历史字节。本项目增加需要服务端配合的历史字节缓存与增量还原。两者思路不同，本仓库为独立实现。
