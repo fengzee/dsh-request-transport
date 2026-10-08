@@ -36,7 +36,7 @@ const origin = await listen(upstream);
 const token = randomBytes(32).toString('hex');
 process.env.DSH_TRANSPORT_SMOKE_TOKEN = token;
 const relay = createRelay({ upstream: `${origin}/v1`, token, onMetric: m => metrics.push(m) });
-const relayURL = `${await listen(relay.server)}/dsh-transport/v1`;
+const relayURL = `${await listen(relay.server)}/v1/request-transport`;
 const ctx = new Context();
 const originalFetch = globalThis.fetch;
 try {

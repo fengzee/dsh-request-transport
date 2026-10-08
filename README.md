@@ -18,7 +18,7 @@ dsh plugin --profile web add github:fengzee/dsh-request-transport#v0.1.0
     routes:
       - provider: fengzee-llm
         upstream: https://llm.fengzee.me/v1
-        relay: https://llm.fengzee.me/dsh-transport/v1
+        relay: https://llm.fengzee.me/v1/request-transport
         auth: api-key
         delta: true
     cacheTtlMs: 3600000
@@ -64,7 +64,7 @@ npm ci --omit=dev --ignore-scripts
 UPSTREAM_BASE_URL=https://your-api.example/v1 npm run relay
 ```
 
-默认监听 `127.0.0.1:8788`，在服务端用 HTTPS 反向代理公开 `/dsh-transport/v1`。应将它放在慢上行链路的远端，放在客户端同一台机器无法节省这段上行流量。该服务持有解开的请求内容与上游凭据，应部署在自己信任的主机上。
+默认监听 `127.0.0.1:8788`，在服务端用 HTTPS 反向代理公开 `/v1/request-transport`。应将它放在慢上行链路的远端，放在客户端同一台机器无法节省这段上行流量。该服务持有解开的请求内容与上游凭据，应部署在自己信任的主机上。
 
 客户端对应路由使用 `auth: relay-token`、`tokenEnv: DSH_TRANSPORT_TOKEN`，上游 API key 继续由 DSH 管理。参考中转只允许配置的一个上游及三个标准模型路径，先校验中转 token，再解压；不跟随上游重定向。`/healthz` 可用于存活探针。
 

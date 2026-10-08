@@ -25,7 +25,7 @@ async function setup(t, options = {}) {
   });
   const origin = await listen(upstream);
   const relay = createRelay({ upstream: `${origin}/v1`, token, ...options });
-  const relayURL = `${await listen(relay.server)}/dsh-transport/v1`;
+  const relayURL = `${await listen(relay.server)}/v1/request-transport`;
   const client = createTransport({ routes: [{ provider: 'test', upstream: `${origin}/v1`, relay: relayURL, tokenEnv: 'DSH_TRANSPORT_TEST_TOKEN' }], onMetric: m => metrics.push(m) });
   t.after(async () => { client.dispose(); await close(relay.server); await close(upstream); });
   const send = async (body, s = scope, key = 'upstream-key', path = 'chat/completions') => {
@@ -77,10 +77,10 @@ test('cache eviction resends full once and invokes upstream exactly once', async
 });
 
 test('same-session concurrent and branched calls remain immutable', async t => {
-  const f = await setup(t); await f.send(fixture('seed'));
+  const f = await setup(t, { maxConcurrent: 16 }); await f.send(fixture('seed'));
   const bodies = Array.from({ length: 8 }, (_, i) => fixture(`parallel-${i}`));
   await Promise.all(bodies.map(body => f.send(body)));
-  assert.deepEqual(f.received.slice(1).map(r => r.body).sort(), [...bodies].sort());
+  assert.deepEqual(f.received.slice(1).map(r => hash(r.body)).sort(), bodies.map(hash).sort());
   await f.send(fixture('continued')); assert.equal(f.received.at(-1).body, fixture('continued'));
 });
 
@@ -120,7 +120,7 @@ test('binary difference handles unicode, empty bodies, deletion and random edits
 
 test('network failure is never replayed by transport', async () => {
   let calls = 0;
-  const client = createTransport({ routes: [{ provider: 'test', upstream: 'https://example.invalid/v1', relay: 'https://relay.invalid/dsh-transport/v1', tokenEnv: 'DSH_TRANSPORT_TEST_TOKEN' }], fetch: async () => { calls++; throw new Error('connection lost'); } });
+  const client = createTransport({ routes: [{ provider: 'test', upstream: 'https://example.invalid/v1', relay: 'https://relay.invalid/v1/request-transport', tokenEnv: 'DSH_TRANSPORT_TEST_TOKEN' }], fetch: async () => { calls++; throw new Error('connection lost'); } });
   await assert.rejects(client.fetch('https://example.invalid/v1/messages', { method: 'POST', body: '{}' }, scope));
   assert.equal(calls, 1);
 });

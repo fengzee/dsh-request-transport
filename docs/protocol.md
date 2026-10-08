@@ -2,7 +2,7 @@
 
 ## HTTP
 
-`POST /dsh-transport/v1`，`Content-Type: application/vnd.dsh-request-transport.v1`，`Content-Encoding: gzip`。外层 Bearer 使用服务端认可的身份；内置网关可要求它与内部模型 API key 相同，独立中转使用额外的随机 token。
+`POST /v1/request-transport`，`Content-Type: application/vnd.dsh-request-transport.v1`，`Content-Encoding: gzip`。外层 Bearer 使用服务端认可的身份；内置网关可要求它与内部模型 API key 相同，独立中转使用额外的随机 token。
 
 解压后依次是 4 字节大端无符号元数据长度、UTF-8 JSON 元数据、二进制新增内容。元数据最多 32768 字节，还原体最多 33554432 字节。发送端不修改原请求体字节。
 
