@@ -1,0 +1,51 @@
+{
+  "name": "dsh-request-transport",
+  "version": "0.1.0",
+  "description": "Gzip and lossless session-scoped delta uploads for DSH 0.2.0-rc.2",
+  "type": "module",
+  "license": "MIT",
+  "main": "lib/plugin.mjs",
+  "exports": {
+    ".": "./lib/plugin.mjs",
+    "./relay": "./lib/relay.mjs"
+  },
+  "bin": {
+    "dsh-transport-relay": "scripts/relay.mjs"
+  },
+  "files": [
+    "lib",
+    "scripts",
+    "docs",
+    "cordis.patch.yml",
+    "README.md",
+    "LICENSE"
+  ],
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    }
+  },
+  "engines": {
+    "node": ">=22"
+  },
+  "peerDependencies": {
+    "@deepseek-ai/dsh-llm": "0.2.0-rc.2"
+  },
+  "peerDependenciesMeta": {
+    "@deepseek-ai/dsh-llm": {
+      "optional": true
+    }
+  },
+  "dependencies": {
+    "@deepseek-ai/schemastery": "3.18.4"
+  },
+  "scripts": {
+    "test": "node --test test/*.test.mjs",
+    "test:dsh": "node scripts/smoke-dsh.mjs",
+    "relay": "node scripts/relay.mjs"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fengzee/dsh-request-transport.git"
+  }
+}

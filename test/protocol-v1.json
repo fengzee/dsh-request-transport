@@ -1,0 +1,7 @@
+{
+  "generator": "dsh-request-transport/lib/protocol.mjs v0.1.0",
+  "original": "{\"model\":\"allowed-a\",\"messages\":[{\"role\":\"user\",\"content\":\"中英文 Unicode 😀 first\"}],\"stream\":true}",
+  "next": "{\"model\":\"allowed-a\",\"messages\":[{\"role\":\"user\",\"content\":\"中英文 Unicode 🧪 second\"}],\"stream\":true}",
+  "full": "H4sIAAAAAAAAE23QvY7UMBiF4eVORqdOSBznx3HJPWyFKPzzeRLWiSPbmYUdjURHQY/ouAIKOi4IIUouAQUKGtpTvHp07u6epSsukKzAHj0kppy3JKuK3qhl8/TchKW6sMpMKlcmHFOew5pQYIvhMluKkMiUMgoswdLRUN6HR7KlQoFEKc1hhUSjdN+ruhZDyzutRM21YB25QXDW9dZxIxqmubP92GvDO2f7YXSCt93Qms5oFJhIWYoJ8gq15ynE+Unlv/UXpCLFU3ooHa3nJ6LS+6U8YOW2az8bFDBhzbTmMr/d6GBum5/Nn0D1OoUVtwIP82oh4XbvUSCreKYMCdLMGU2uVbarRT92QgxDq5vW0GiUbbpx6Hmj2cg1H4UbWsGdY03Lx4Gxvq1RwNN6zhMkq7vb9b9XLZSSOlOCfHlFDP4w7oniPzkkvn/78vPD1x8f35/u19kES6dfnz+9O7k5pozbqwIpR1ILZI473X4DeoC0B+ABAAA=",
+  "delta": "H4sIAAAAAAAAEyWRS27cMBBEnZsYvaYiUvxz6ZuwyeaMYo4oiJyJY8PnCZAD5TyBnF2hUHh4QD09ffv7AQ8IgsH9qBDgOsbewzzTW7ztlb6ndpsfYk7XOObUzmqsbevAYD/aY810QIBBfQCDW8t0MmKt7SflKQKDTr2vbYMAS0RjIufOKqkxOi7RCU3FOim0yUUmtwiUJRtvMEldsrG+OKm0VUknBAZXipmODuED4n1c27G+x/Gf/kLxoOO5v06Ftss70VTrbTrFpv2OdU3AILVt0Dam8WunU3Pf65q+APOP3jb4ZPC6bhkCZKrjtMfYzyWhKAmpqJg1d8Zr56xVuKhEPsW8aG+NXFB4idK7YpWTpYhFSW+FMIoDgxGPCw0I4HUqqIWMXGYhMlexWIXZac0pOy08okBCkfWiMEqZbY5co7MJMfmUgUGl7TKuEAQ35w1U1jcI1jPo9/KVhfv8/ee5U2pb/ge9Pho54wEAAA=="
+}
