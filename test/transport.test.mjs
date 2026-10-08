@@ -5,7 +5,7 @@ import { randomBytes } from 'node:crypto';
 import { once } from 'node:events';
 import { createRelay } from '../lib/relay.mjs';
 import { createTransport } from '../lib/client.mjs';
-import { TYPE, MemoryCache, hash, difference, reconstruct, pack, zip } from '../lib/protocol.mjs';
+import { TYPE, MemoryCache, hash, difference, reconstruct, pack, zip, endpoint } from '../lib/protocol.mjs';
 
 const token = 'test-only-token-that-is-at-least-32-bytes';
 process.env.DSH_TRANSPORT_TEST_TOKEN = token;
@@ -37,7 +37,7 @@ async function setup(t, options = {}) {
 
 test('full gzip then delta preserve exact bytes and stream for three API paths', async t => {
   const f = await setup(t);
-  for (const path of ['chat/completions', 'responses', 'messages']) {
+  for (const path of ['chat/completions', 'responses', 'messages', 'messages?beta=true']) {
     const first = fixture('first'), second = fixture('第二次 😀');
     assert.equal((await f.send(first, scope, 'key', path)).response.status, 200);
     assert.match((await f.send(second, scope, 'key', path)).text, /\[DONE\]/);
@@ -46,7 +46,17 @@ test('full gzip then delta preserve exact bytes and stream for three API paths',
     assert.ok(f.metrics.at(-1).uploadedBytes < 1500);
     assert.equal(f.received.at(-1).headers['content-encoding'], undefined);
     assert.equal(f.received.at(-1).headers.authorization, 'Bearer key');
+    assert.equal(f.received.at(-1).path, `/v1/${path}`);
   }
+});
+
+test('only the Anthropic SDK beta query is accepted', () => {
+  const base = 'https://example.com/v1';
+  assert.equal(endpoint(base, `${base}/messages?beta=true`), true);
+  for (const path of ['messages?beta=false', 'messages?beta=true&other=1', 'messages?beta=true&beta=true', 'chat/completions?beta=true', 'responses?beta=true']) {
+    assert.equal(endpoint(base, `${base}/${path}`), false);
+  }
+  assert.equal(endpoint(base, 'https://other.example/v1/messages?beta=true'), false);
 });
 
 test('parent, siblings, model, credential and endpoint are independent', async t => {

@@ -7,7 +7,7 @@
 ## 安装到 DSH
 
 ```bash
-dsh plugin --profile web add github:fengzee/dsh-request-transport#v0.1.0
+dsh plugin --profile web add github:fengzee/dsh-request-transport#v0.1.1
 ```
 
 在 `$DSH_HOME/profiles/web/cordis.patch.yml` 中增加或修改以下条目。已有 YAML 数组为空 `[]` 时，将它替换成条目数组；已有内容时保留其它条目。`provider` 必须是 DSH 的 provider ID。
@@ -23,6 +23,11 @@ dsh plugin --profile web add github:fengzee/dsh-request-transport#v0.1.0
         delta: true
     cacheTtlMs: 3600000
 ```
+
+Claude 原生路由另加一条 `provider: fengzee-claude`，传输插件的 `upstream` 仍写
+`https://llm.fengzee.me/v1`。模型 provider 的 Anthropic `baseURL` 写
+`https://llm.fengzee.me`，由 SDK 拼接 `/v1/messages?beta=true`。0.1.1 起该查询参数也参与
+压缩与增量传输，其他查询参数继续走原路径。
 
 `auth: api-key` 直接复用模型请求中已有的 API key，不另存密钥，也不改 DSH 的模型、凭据或默认模型。网关必须实现本仓库的协议；普通 OpenAI 兼容端点不能直接接收这种帧。
 
@@ -57,7 +62,7 @@ DSH 0.2.0-rc.2 没有适用于这两个内置适配器的公开自定义 fetch �
 生产网关可按 [协议文档](docs/protocol.md) 内置解码。Fengzee LLM 使用 Go 流式解压和磁盘缓存，保留既有模型权限与计费流程。仓库也提供一个 Node 参考中转，适合已有网关前方的小规模部署：
 
 ```bash
-git clone --branch v0.1.0 https://github.com/fengzee/dsh-request-transport.git
+git clone --branch v0.1.1 https://github.com/fengzee/dsh-request-transport.git
 cd dsh-request-transport
 npm ci --omit=dev --ignore-scripts
 # 通过部署环境注入 DSH_TRANSPORT_TOKEN，至少 32 字节随机值，不写入仓库。
