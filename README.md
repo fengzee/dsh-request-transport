@@ -24,10 +24,7 @@ dsh plugin --profile web add github:fengzee/dsh-request-transport#v0.1.1
     cacheTtlMs: 3600000
 ```
 
-Claude 原生路由另加一条 `provider: fengzee-claude`，传输插件的 `upstream` 仍写
-`https://llm.fengzee.me/v1`。模型 provider 的 Anthropic `baseURL` 写
-`https://llm.fengzee.me`，由 SDK 拼接 `/v1/messages?beta=true`。0.1.1 起该查询参数也参与
-压缩与增量传输，其他查询参数继续走原路径。
+Claude 原生路由另加一条 `provider: fengzee-claude`，传输插件的 `upstream` 仍写 `https://llm.fengzee.me/v1`。模型 provider 的 Anthropic `baseURL` 写 `https://llm.fengzee.me`，由 SDK 拼接 `/v1/messages?beta=true`。0.1.1 起该查询参数也参与压缩与增量传输，其他查询参数继续走原路径。
 
 `auth: api-key` 直接复用模型请求中已有的 API key，不另存密钥，也不改 DSH 的模型、凭据或默认模型。网关必须实现本仓库的协议；普通 OpenAI 兼容端点不能直接接收这种帧。
 
