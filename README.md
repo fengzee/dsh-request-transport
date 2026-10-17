@@ -1,13 +1,13 @@
 # DSH Request Transport
 
-为 **DeepSeek Harness 0.2.0-rc.2** 减少模型请求的上行数据：首次发送全量 gzip，后续引用已缓存的历史字节，再将新增部分 gzip。服务端逐字节还原原请求后调用模型，上游收到的上下文和 token 计费不变。
+为 **DeepSeek Harness 0.2.0-rc.2 与 0.2.1-rc.2** 减少模型请求的上行数据：首次发送全量 gzip，后续引用已缓存的历史字节，再将新增部分 gzip。服务端逐字节还原原请求后调用模型，上游收到的上下文和 token 计费不变。
 
 插件按 provider 显式启用，安装时所有路由默认关闭。支持标准的 OpenAI Chat Completions、Responses 和 Anthropic Messages HTTP 路径。需要 Node.js 22 或更高版本。
 
 ## 安装到 DSH
 
 ```bash
-dsh plugin --profile web add github:fengzee/dsh-request-transport#v0.1.1
+dsh plugin --profile web add github:fengzee/dsh-request-transport#v0.1.2
 ```
 
 在 `$DSH_HOME/profiles/web/cordis.patch.yml` 中增加或修改以下条目。已有 YAML 数组为空 `[]` 时，将它替换成条目数组；已有内容时保留其它条目。`provider` 必须是 DSH 的 provider ID。
@@ -52,14 +52,14 @@ Fengzee LLM 面板的「API 复用 / 实传」展示复用量、新增内容和 
 
 客户端默认最多保留 128 MiB、128 个会话基线，TTL 为 1 小时；没有会话 ID 时仅 gzip。重启、热重载、逐出和服务端切换都可能导致全量补传，不会改变模型输入。当前差分复用相同前缀和后缀，中间部分原样传送，支持二进制 UTF-8 边界，无须重排或重新序列化 JSON。
 
-DSH 0.2.0-rc.2 没有适用于这两个内置适配器的公开自定义 fetch 配置，因此插件使用公开的 `llm/stream` waterfall 标记异步调用范围，并在插件生命周期内包装 `globalThis.fetch`。仅有匹配范围的请求会改变；卸载会恢复或停用自己的包装。升级 DSH 后请重新验证适配器链路。
+DSH 0.2 的这两个内置适配器没有公开的自定义 fetch 配置，因此插件使用公开的 `llm/stream` waterfall 标记异步调用范围，并在插件生命周期内包装 `globalThis.fetch`。仅有匹配范围的请求会改变；卸载会恢复或停用自己的包装。`peerDependencies` 只列出已用 `npm run test:dsh` 验证过的 DSH 版本，其他版本会被 DSH 的兼容检查停用；升级 DSH 后先跑该测试，再放宽版本。
 
 ## 自建配套中转
 
 生产网关可按 [协议文档](docs/protocol.md) 内置解码。Fengzee LLM 使用 Go 流式解压和磁盘缓存，保留既有模型权限与计费流程。仓库也提供一个 Node 参考中转，适合已有网关前方的小规模部署：
 
 ```bash
-git clone --branch v0.1.1 https://github.com/fengzee/dsh-request-transport.git
+git clone --branch v0.1.2 https://github.com/fengzee/dsh-request-transport.git
 cd dsh-request-transport
 npm ci --omit=dev --ignore-scripts
 # 通过部署环境注入 DSH_TRANSPORT_TOKEN，至少 32 字节随机值，不写入仓库。
